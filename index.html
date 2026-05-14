@@ -2190,16 +2190,8 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle ES',content_category:'Ha
 
   codSubmit.addEventListener('click',(e)=>{
     e.preventDefault();
-    let allOk=true;
-    fields.forEach(f=>{if(!validateField(f))allOk=false});
-    if(!allOk){
-      const firstErr=cart.querySelector('.cod-field.err input, .cod-field.err select');
-      if(firstErr){
-        firstErr.scrollIntoView({behavior:'smooth',block:'center'});
-        setTimeout(()=>firstErr.focus(),300);
-      }
-      return;
-    }
+    // Run validation only to mark fields visually with warnings — never block submit.
+    fields.forEach(f=>validateField(f));
     codSubmit.innerHTML='<span>Enviando…</span>';
     codSubmit.disabled=true;
 
