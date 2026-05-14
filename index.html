@@ -2220,6 +2220,7 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle ES',content_category:'Ha
       zip:document.getElementById('codZip').value.trim(),
       province:document.getElementById('codProvince').value,
       notes:document.getElementById('codNotes').value.trim(),
+      received_at:new Date().toLocaleString('es-ES',{timeZone:'Europe/Madrid',hour12:false}),
       created_at:new Date().toISOString(),
       url:window.location.href,
     };
