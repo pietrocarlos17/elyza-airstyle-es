@@ -21,13 +21,14 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle ES',content_category:'Ha
 
 <!--
   ============================================================
-  CONFIGURACIÓN DE PEDIDOS — leer pedidos-setup.md
-  Pega abajo la URL de tu Google Apps Script (Web App).
+  CONFIGURACIÓN DE PEDIDOS — endpoint de SheetDB.io
+  Cada pedido se envía como POST {data: payload} a esta URL.
   Mientras esté vacío, los pedidos solo se guardan en localStorage.
   ============================================================
 -->
 <script>
-  window.ELYZA_COD_ENDPOINT = "https://script.google.com/macros/s/AKfycbxFEF_8VKrYTWh_X7sfbQiDjklKzMGYB6KLr1KANyK_9QkfmRCFMgiNC0C8J7N0pbQ/exec";
+  window.ELYZA_COD_ENDPOINT = "https://sheetdb.io/api/v1/sl81qqaaya1y1";
+  window.ELYZA_COD_PROVIDER = "sheetdb";
 </script>
 
 
@@ -2245,12 +2246,16 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle ES',content_category:'Ha
       cart.scrollTop=0;
     };
     if(endpoint){
-      // text/plain avoids the CORS preflight that Google Apps Script does not answer.
-      // Apps Script still receives the JSON body in e.postData.contents.
+      const provider=window.ELYZA_COD_PROVIDER||'';
+      const isSheetDB=provider==='sheetdb'||/sheetdb\.io/i.test(endpoint);
+      const body=isSheetDB?JSON.stringify({data:payload}):JSON.stringify(payload);
+      const headers=isSheetDB
+        ?{'Content-Type':'application/json','Accept':'application/json'}
+        :{'Content-Type':'text/plain;charset=utf-8'};
       fetch(endpoint,{
         method:'POST',
-        headers:{'Content-Type':'text/plain;charset=utf-8'},
-        body:JSON.stringify(payload),
+        headers,
+        body,
         redirect:'follow',
       })
         .then(()=>finalize())
