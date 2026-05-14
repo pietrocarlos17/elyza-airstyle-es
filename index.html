@@ -1988,8 +1988,8 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle ES',content_category:'Ha
     <div class="row-2">
       <div class="cod-field">
         <label for="codPhone">Teléfono móvil</label>
-        <input type="tel" id="codPhone" name="phone" autocomplete="tel" placeholder="6XX XXX XXX" inputmode="tel" pattern="[0-9\s+\-]{9,15}" required>
-        <span class="cod-error">Teléfono no válido (9 dígitos)</span>
+        <input type="tel" id="codPhone" name="phone" autocomplete="tel" placeholder="6XX XXX XXX" inputmode="tel" required>
+        <span class="cod-error">Teléfono no válido (mín. 9 dígitos)</span>
       </div>
       <div class="cod-field">
         <label for="codEmail">Email <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></label>
@@ -2163,7 +2163,7 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle ES',content_category:'Ha
   const codThanks=document.getElementById('codThanks');
   const fields=[
     {id:'codName',min:3},
-    {id:'codPhone',pattern:/^[0-9\s+\-]{9,15}$/},
+    {id:'codPhone',validate:v=>{const d=(v||'').replace(/\D/g,'');return d.length>=9&&d.length<=15}},
     {id:'codAddress',min:5},
     {id:'codCity',min:2},
     {id:'codZip',pattern:/^[0-9]{5}$/},
@@ -2176,6 +2176,7 @@ fbq('track','ViewContent',{content_name:'Elyza AirStyle ES',content_category:'Ha
     let ok=true;
     if(f.min&&v.length<f.min)ok=false;
     if(f.pattern&&!f.pattern.test(v))ok=false;
+    if(f.validate&&!f.validate(v))ok=false;
     if(!v)ok=false;
     wrap.classList.toggle('err',!ok);
     return ok;
